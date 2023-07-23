@@ -10,8 +10,10 @@ rmotor = Motor(Port.B, positive_direction=Direction.COUNTERCLOCKWISE)
 wheels = DriveBase(left_motor=lmotor, right_motor=rmotor, wheel_diameter=56, axle_track=60)
 leftboi =  ColorSensor(Port.F)
 rightboi = ColorSensor(Port.E)
+
+target = 80
 def sensed_color():
-    return leftboi.reflection()<80 or rightboi.reflection()<80
+    return leftboi.reflection()<target or rightboi.reflection()<target
 
 def color_equal():
     return abs(leftboi.reflection() - rightboi.reflection())<3
@@ -19,11 +21,28 @@ def wait_until(condition):
     while not condition():
         pass
 def line_square(speed):
+    # step1 we want to move to the target, once we hit the target we stop, isint it
     wheels.drive(speed,0)
     wait_until(sensed_color)
     wheels.stop()
+    # step2 we want to move the other wheel so that it is squared to the line using pid controls system
+    pid_squar()
+def pid_squar():
+    pass
+def gain(signal):
+    p = [signal]
+    pass
+
+
+
+
+
+
+
+
     print(leftboi.color())
     print(rightboi.color())
+    #
     if leftboi.color()==Color.NONE:
         wheels.drive(0,5)
         wait_until(color_equal)
