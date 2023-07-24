@@ -11,7 +11,7 @@ wheels = MotorPair('A', 'B')
 leftboi = ColorSensor('E')
 rightboi = ColorSensor('F')
 hub.light_matrix.show_image('DUCK')
-target = 60
+target = 70
 
 
 def line_square():
@@ -19,7 +19,7 @@ def line_square():
     while True:
         lsignal = leftboi.get_reflected_light() - target
         rsignal = rightboi.get_reflected_light() - target
-        if leftboi.get_color() != 'white' and rightboi.get_color() != 'white' and  (abs(lsignal-rsignal)<3 or count > 100):
+        if abs(lsignal)+abs(rsignal)<4 or count > 100:
             wheels.stop()
             break
         lspeed = gain(lsignal)
@@ -29,21 +29,19 @@ def line_square():
             wheels.start_tank(lspeed // 3, rspeed // 3)
         else:
             wheels.start_tank(lspeed, rspeed)
-    print('Done squaring error = {} after {} tries'.format(lsignal - rsignal, count))
+    print('Done squaring with error = {} after {} tries'.format(abs(lsignal) + abs(rsignal), count))
 
 
 def gain(signal):
-    p = signal * .5
+    p = signal * pidk[0]
     # p is proportional feed back
-    d = (signal - history[-1]) * 0.061
-    # d = 0 cuz we dont need it
+    d = (signal - history[-1]) * pidk[2]
     history.append(signal)
-    if len(history) > 50:
+    if len(history) > 100:
         history.pop(0)
-    # print(len(history))
-    i = sum(history) * 0.05
-    # return -int(p + i + d)
-    return -int(p-d)
+    i = sum(history) * pidk[1]
+    return -int(p+i-d)
 
+pidk = [.5, .0, .06]
 history = [0]
 line_square()
