@@ -1,31 +1,64 @@
-from spike import PrimeHub, LightMatrix, Button, StatusLight, ForceSensor, MotionSensor, Speaker, ColorSensor, App, DistanceSensor, Motor, MotorPair
+# LEGO type:standard slot:0 autostart
+
+from spike import PrimeHub, LightMatrix, Button, StatusLight, ForceSensor, MotionSensor, Speaker, ColorSensor, App, \
+    DistanceSensor, Motor, MotorPair
 from spike.control import wait_for_seconds, wait_until, Timer
 from math import *
-from spike.operator import equal_to
+
 # initalize
 hub = PrimeHub()
-wheels = MotorPair('A', 'B')
-leftboi = ColorSensor('F')
-rightboi = ColorSensor('E')
-hub.light_matrix.show_image('DUCK')
+wheels = MotorPair('B', 'A')
+left_wheel = Motor('B')
+right_wheel = Motor('A')
+leftCSensor = ColorSensor('F')
+rightCSensor = ColorSensor('E')
+bumper = ForceSensor('D')
 
-def sensed_color():
-    return leftboi.get_reflected_light()<80 or rightboi.get_reflected_light()<80
+perimeter = pi * 56
 
-def color_equal():
-    return abs(leftboi.get_reflected_light() - rightboi.get_reflected_light())<3
 
-def line_square(speed):
-    wheels.start(0, speed)
-    wait_until(sensed_color)
-    print('maN')
-    if leftboi.get_color()=='black':
-        wheels.start_tank(speed,5)
-        wait_until(color_equal)
-        wheels.stop()
-    else:
-        wheels.start_tank(5,speed)
-        wait_until(color_equal)
-        wheels.stop()
+# functions
+def deviation():
+    # when dieviate to the left, return value negative
+    # when ddeviate to the right, return value positive
+    leftLight = leftCSensor.get_reflected_light()
+    rightLight = rightCSensor.get_reflected_light()
+    diff = rightLight - leftLight
+    return diff
 
-line_square(-10)
+
+history = [0]
+
+
+def gain(signal):
+    p = signal * 0.2
+    # p is proportional feed back
+    d = (signal - history[-1]) * 0.0
+    # d = 0 cuz we dont need it
+    history.append(signal)
+    if len(history) > 5:
+        history.pop(0)
+    # print(len(history))
+    i = sum(history) * 0.15
+    return int(p + i + d)
+# gain factor 3 o' em
+
+def manuver():
+    left_speed = left_wheel.get_speed()
+    left_wheel.run_to_position(180, speed=left_speed)
+    right_speed = right_wheel.get_speed()
+    right_wheel.run_to_position(180, speed=right_speed)
+    wheels.move_tank(180, 'degrees', left_speed, -right_speed)
+
+def line_follower(speed):
+    # if you see a black go start_tank.move(20,-20) until u see white
+    while True:
+        signal = deviation()
+        diff = gain(signal)
+        wheels.start_tank(speed - diff, speed + diff)
+        if bumper.is_pressed():
+            manuver()
+
+
+# program
+line_follower(speed=40)

@@ -27,7 +27,7 @@ def line_square():
         # else:
         lmotor.run(lspeed)
         rmotor.run(rspeed)
-        if abs(lsignal-rsignal)<10%:
+        if abs(lsignal-rsignal)<10:
             wheels.stop
 
 
