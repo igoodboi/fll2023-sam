@@ -9,20 +9,26 @@ hub = PrimeHub()
 lmotor = Motor(Port.A, positive_direction=Direction.CLOCKWISE)
 rmotor = Motor(Port.B, positive_direction=Direction.COUNTERCLOCKWISE)
 wheels = DriveBase(left_motor=lmotor, right_motor=rmotor, wheel_diameter=56, axle_track=60)
-leftboi = ColorSensor(Port.F)
-rightboi = ColorSensor(Port.E)
+leftboi = ColorSensor(Port.E)
+rightboi = ColorSensor(Port.F)
 
-target = 80
+target = 60
 
 
 def line_square():
     while True:
         lsignal = leftboi.reflection() - target
-        lspeed = gain(lsignal)
         rsignal = rightboi.reflection() - target
-        lmotor.run(lspeed)
+        lspeed = gain(lsignal)
         rspeed = gain(rsignal)
+        # if lsignal < 0.1 * target and rightboi < 0.1 * target:
+            # lmotor.run(lspeed / 3)
+            # rmotor.run(rspeed / 3)
+        # else:
+        lmotor.run(lspeed)
         rmotor.run(rspeed)
+        if abs(lsignal-rsignal)<10%:
+            wheels.stop
 
 
 def gain(signal):
