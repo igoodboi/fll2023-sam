@@ -15,24 +15,35 @@ target = 60
 
 
 def line_square():
+    count = 0
     while True:
         lsignal = leftboi.get_reflected_light() - target
         rsignal = rightboi.get_reflected_light() - target
-        if leftboi.get_color() == 'black' == rightboi.get_color() and abs(lsignal-rsignal)<3:
+        if leftboi.get_color() == 'black' == rightboi.get_color() and  abs(lsignal-rsignal)<3 or count > 5:
             wheels.stop()
             break
         lspeed = gain(lsignal)
         rspeed = gain(rsignal)
         if lsignal < 10 and rsignal < 10:
-            wheels.start_tank(lspeed // 4, rspeed // 4)
+            count += 1
+            wheels.start_tank(lspeed // 3, rspeed // 3)
         else:
             wheels.start_tank(lspeed, rspeed)
     print('Done')
 
-history = []
+
 def gain(signal):
-    p = int(-signal * .5)
+    p = signal * .5
+    # p is proportional feed back
+    d = (signal - history[-1]) * 0.
+    # d = 0 cuz we dont need it
+    history.append(signal)
+    if len(history) > 10:
+        history.pop(0)
+    # print(len(history))
+    i = sum(history) * 0.0
+    # return -int(p + i + d)
+    return -int(p)
 
-    return p
-
+history = [0]
 line_square()
