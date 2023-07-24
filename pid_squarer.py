@@ -2,6 +2,7 @@ from spike import PrimeHub, LightMatrix, Button, StatusLight, ForceSensor, Motio
 from spike.control import wait_for_seconds, wait_until, Timer
 from math import *
 from spike.operator import equal_to
+
 # initalize
 hub = PrimeHub()
 # wheels = MotorPair('A', 'B')
@@ -19,7 +20,7 @@ def line_square():
     while True:
         lsignal = leftboi.get_reflected_light() - target
         rsignal = rightboi.get_reflected_light() - target
-        if abs(lsignal)+abs(rsignal)<4 or count > 100:
+        if abs(lsignal) + abs(rsignal) < 4 or count > 100:
             wheels.stop()
             break
         lspeed = gain(lsignal)
@@ -40,7 +41,8 @@ def gain(signal):
     if len(history) > 100:
         history.pop(0)
     i = sum(history) * pidk[1]
-    return -int(p+i-d)
+    return -int(p + i - d)
+
 
 pidk = [.5, .0, .06]
 history = [0]
