@@ -22,7 +22,7 @@ def start_tank(left_speed, right_speed):
     wheels.drive(speed,turn_rate)
     pass
 
-gain = 80
+gain = 140
 def line_follower(speed):
     # if u see black go 'drive' until u see white
 
@@ -42,4 +42,4 @@ def deviation():
 
 
 # program
-line_follower(speed=65)
+line_follower(speed=-100)
