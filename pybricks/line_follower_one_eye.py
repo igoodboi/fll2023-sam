@@ -6,19 +6,24 @@ from pybricks.tools import wait, StopWatch
 
 hub = PrimeHub()
 # Initialize a motor on port A.
-lmotor = Motor(Port.B, positive_direction=Direction.CLOCKWISE)
-rmotor = Motor(Port.A, positive_direction=Direction.COUNTERCLOCKWISE)
+lmotor = Motor(Port.B, positive_direction=Direction.COUNTERCLOCKWISE)
+rmotor = Motor(Port.A, positive_direction=Direction.CLOCKWISE)
 wheels = DriveBase(left_motor=lmotor, right_motor=rmotor, wheel_diameter=56, axle_track=80)
 eye = ColorSensor(Port.C)
 eye.detectable_colors([Color.BLACK, Color.WHITE])
 
-goal = 40
+goal = 60
 lowest = 20
-default_speed = -100
-p, i, d = 50, .3, 0
+default_speed = 150
+p, i, d = 50, .0, 0
 
-len_hist = 20
+len_hist = 10
 history = [goal]
+
+
+def rectify(error):
+    pass
+
 
 def gain(signal):
     error = signal - goal
@@ -30,6 +35,7 @@ def gain(signal):
 def start_tank(left_speed, right_speed):
     speed = (right_speed + left_speed) / 2
     turn_rate = (right_speed - left_speed) / 80
+    # print(left_speed, right_speed, speed, turn_rate)
     wheels.drive(speed, turn_rate)
 
 
