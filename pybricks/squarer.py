@@ -14,13 +14,13 @@ rightboi = ColorSensor(Port.E)
 bumper = ForceSensor(Port.D)
 
 target_reflection = 50
-default_turn_rate = -50
+default_turn_rate = -30
 default_speed = -30
 
 
 def touch_line():
     while leftboi.reflection() >= target_reflection and rightboi.reflection() >= target_reflection:
-        wheels.drive(default_speed, 0)
+        wheels.drive(default_speed * 1.5, 0)
 
 
 touch_line()
