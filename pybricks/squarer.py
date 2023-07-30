@@ -18,15 +18,29 @@ default_turn_rate = -30
 default_speed = -30
 
 
+# it just defines the www
 def touch_line():
+    """
+    this function just makes the code less clustered and crummy
+    """
     while leftboi.reflection() >= target_reflection and rightboi.reflection() >= target_reflection:
         wheels.drive(default_speed * 1.5, 0)
 
 
-touch_line()
+# now the code looks better
+# touch_line()
+# we dont need it because here the line 35 touch_line()
 while leftboi.reflection() >= target_reflection:
     wheels.drive(0, -default_turn_rate)
     touch_line()
 while rightboi.reflection() >= target_reflection:
     wheels.drive(0, default_turn_rate)
     touch_line()
+'''
+we need two of the 
+"while leftboi.reflection() >= target_reflection:
+    wheels.drive(0, -default_turn_rate)
+    touch_line()"
+because we need account for left tilt, and right tilt
+and for both scenarios
+'''
