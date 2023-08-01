@@ -2,6 +2,7 @@ from pybricks.hubs import PrimeHub
 from pybricks.pupdevices import Motor, ColorSensor, UltrasonicSensor, ForceSensor
 from pybricks.parameters import Button, Color, Direction, Port, Side, Stop
 from pybricks.robotics import DriveBase
+from umath import *
 from pybricks.tools import wait, StopWatch
 
 hub = PrimeHub()
@@ -15,6 +16,7 @@ eye.detectable_colors([Color.BLACK, Color.WHITE])
 goal = 60
 lowest = 20
 default_speed = 150
+error_margin = 10
 p, i, d = 50, .0, 0
 
 len_hist = 10
@@ -30,7 +32,10 @@ def gain(signal):
     history.append(error)
     if len(history) > len_hist:
         history.pop(0)
-    return p * error + i * sum(history)
+    diff = p * error + i * sum(history)
+    speed = default_speed * exp(-pow(error / error_margin, 2))
+    return speed - diff, speed + diff
+
 
 def start_tank(left_speed, right_speed):
     speed = (right_speed + left_speed) / 2
@@ -39,7 +44,7 @@ def start_tank(left_speed, right_speed):
     wheels.drive(speed, turn_rate)
 
 
-def line_follower(speed):
+def line_follower():
     # if u see black go 'drive' until u see white
     while True:
         c = eye.color()
@@ -48,9 +53,9 @@ def line_follower(speed):
         if len(history) > 50:
             history.pop(0)
         signal = eye.reflection()
-        diff = gain(signal)
-        start_tank(speed - diff, speed + diff)
+        left_speed, right_speed = gain(signal)
+        start_tank(left_speed, right_speed)
 
 
 # program
-line_follower(speed=default_speed)
+line_follower()
