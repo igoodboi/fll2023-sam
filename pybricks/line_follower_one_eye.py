@@ -14,17 +14,12 @@ eye = ColorSensor(Port.C)
 eye.detectable_colors([Color.BLACK, Color.WHITE])
 
 goal = 60
-lowest = 20
 default_speed = 150
 error_margin = 10
 p, i, d = 50, .0, 0
 
 len_hist = 10
 history = [goal]
-
-
-def rectify(error):
-    pass
 
 
 def gain(signal):
@@ -47,7 +42,7 @@ def start_tank(left_speed, right_speed):
 def line_follower():
     # if u see black go 'drive' until u see white
     while True:
-        c = eye.color()
+        eye.color()
         r = eye.reflection()
         history.append(r)
         if len(history) > 50:
