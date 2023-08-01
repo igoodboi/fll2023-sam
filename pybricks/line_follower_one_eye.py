@@ -15,7 +15,7 @@ eye.detectable_colors([Color.BLACK, Color.WHITE])
 
 goal = 60
 default_speed = 150
-error_margin = 10
+error_margin = 40
 p, i, d = 50, .0, 0
 
 len_hist = 10
@@ -28,7 +28,8 @@ def gain(signal):
     if len(history) > len_hist:
         history.pop(0)
     diff = p * error + i * sum(history)
-    speed = default_speed * exp(-pow(error / error_margin, 2))
+    slow_factor = exp(-pow(error / error_margin, 2))
+    speed = default_speed * slow_factor
     return speed - diff, speed + diff
 
 
