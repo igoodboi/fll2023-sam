@@ -1,8 +1,8 @@
 from pybricks.hubs import PrimeHub
-from pybricks.pupdevices import Motor, ColorSensor, UltrasonicSensor, ForceSensor
-from pybricks.parameters import Button, Color, Direction, Port, Side, Stop
+from pybricks.parameters import Direction, Port
+from pybricks.pupdevices import Motor, ColorSensor, ForceSensor
 from pybricks.robotics import DriveBase
-from pybricks.tools import wait, StopWatch
+from umath import *
 
 hub = PrimeHub()
 # Initialize a motor on port A.
@@ -13,24 +13,42 @@ leftboi = ColorSensor(Port.F)
 rightboi = ColorSensor(Port.E)
 bumper = ForceSensor(Port.D)
 
+len_hist = 10
+history = [0]
+p, i, d = 50, .0, 0
+error_margin = 40
+default_speed = 150
+
+
 # perimeter = pi * 56
 
 # functions
 def start_tank(left_speed, right_speed):
     speed = (right_speed + left_speed) / 2
     turn_rate = (right_speed - left_speed) / 80
-    wheels.drive(speed,turn_rate)
-    pass
+    wheels.drive(speed, turn_rate)
 
-gain = 140
-def line_follower(speed):
+
+def gain(signal):
+    error = signal
+    history.append(error)
+    if len(history) > len_hist:
+        history.pop(0)
+    diff = p * error + i * sum(history)
+    slow_factor = exp(-pow(error / error_margin, 2))
+    speed = default_speed * slow_factor
+    return speed - diff, speed + diff
+
+
+def line_follower():
     # if u see black go 'drive' until u see white
-
     while True:
-        diff = deviation()*gain
-        start_tank(speed - diff, speed + diff)
+        error = deviation()
+        left_speed, right_speed = gain(error)
+        start_tank(left_speed, right_speed)
         if bumper.touched():
             wheels.stop()
+
 
 # when dieviated to left return value negative
 # when dieviated to right return value positive
@@ -42,4 +60,4 @@ def deviation():
 
 
 # program
-line_follower(speed=-100)
+line_follower()
