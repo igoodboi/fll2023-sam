@@ -12,11 +12,11 @@ rmotor = Motor(Port.A, positive_direction=Direction.COUNTERCLOCKWISE)
 wheels = DriveBase(left_motor=lmotor, right_motor=rmotor, wheel_diameter=56, axle_track=80)
 eye = ColorSensor(Port.C)
 eye.detectable_colors([Color.BLACK, Color.WHITE])
-default_speed = 70
+margin = 1000
+slow_tingy = 70
+default_speed = 500
 target = 70
 p = 65
-i = 0.0
-d = 0.0
 
 
 def start_tank(left_speed, right_speed):
@@ -28,8 +28,11 @@ def start_tank(left_speed, right_speed):
 def gain(signal):
     error = signal - target
     diff = error * p
-
-    return default_speed + diff, default_speed - diff
+    if diff < -margin or diff > margin:
+        speed = slow_tingy
+    else:
+        speed = default_speed
+    return speed + diff, speed - diff
 
 
 def line_follower():
