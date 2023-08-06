@@ -9,7 +9,7 @@ lmotor = Motor(Port.B, positive_direction=Direction.COUNTERCLOCKWISE)
 rmotor = Motor(Port.A, positive_direction=Direction.CLOCKWISE)
 wheels = DriveBase(left_motor=lmotor, right_motor=rmotor, wheel_diameter=56, axle_track=80)
 
-p, i, d = 60, 10, 0
+p, i, d = 50, 50, 0
 
 
 def stabilizer():
