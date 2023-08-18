@@ -15,7 +15,6 @@ rightboi = ColorSensor(Port.E)
 target = 30
 speed = 20
 
-
 def start_tank(left_speed, right_speed):
     speed = (right_speed + left_speed) / 2
     turn_rate = (right_speed - left_speed) / 80
