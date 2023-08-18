@@ -30,11 +30,7 @@ def turn(angle):
         diff = hub_imu - target
         history += diff
         print(init_angle, hub_imu, target, history, diff)
-        if diff < 0:
-            wheels.turn(diff * pk + history * ik)
-            # wheels.turn(-10)
-        else:
-            break
+        wheels.turn(diff * pk + history * ik)
 
 # while True:
     # print(hub.imu.heading())
