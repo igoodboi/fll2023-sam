@@ -29,9 +29,9 @@ def turn(angle):
         hub_imu = hub.imu.heading()
         diff = hub_imu - target
         history += diff
-        print(init_angle, hub_imu, target, history, diff)
+        print("{:+04.5}, {:+04.5}, {:+04.5}, {:+04.5}, {:+04.5}".format(init_angle, hub_imu, target, history, diff))
         wheels.turn(diff * pk + history * ik)
 
 # while True:
     # print(hub.imu.heading())
-turn(90)
+turn(-0.7000)
