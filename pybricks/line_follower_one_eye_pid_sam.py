@@ -10,11 +10,11 @@ hub = PrimeHub()
 lmotor = Motor(Port.B, positive_direction=Direction.CLOCKWISE)
 rmotor = Motor(Port.A, positive_direction=Direction.COUNTERCLOCKWISE)
 wheels = DriveBase(left_motor=lmotor, right_motor=rmotor, wheel_diameter=56, axle_track=80)
-eye = ColorSensor(Port.C)
+eye = ColorSensor(Port.F)
 eye.detectable_colors([Color.BLACK, Color.WHITE])
 margin = 1000
 slow_tingy = 70
-default_speed = 500
+default_speed = 70
 target = 70
 p = 65
 
@@ -35,11 +35,12 @@ def gain(signal):
     return speed + diff, speed - diff
 
 
-def line_follower():
-    while True:
+def line_follower(distance):
+    while wheels.distance() < distance:
         signal = eye.reflection()
         lspeed, rspeed = gain(signal)
         start_tank(lspeed, rspeed)
+    wheels.stop()
 
 
-line_follower()
+line_follower(distance=300)
