@@ -35,7 +35,7 @@ def gain(signal):
     return speed + diff, speed - diff
 
 
-def line_follower(distance):
+def line_follower(distance=0,tim=0):
     while wheels.distance() < distance:
         signal = eye.reflection()
         lspeed, rspeed = gain(signal)
