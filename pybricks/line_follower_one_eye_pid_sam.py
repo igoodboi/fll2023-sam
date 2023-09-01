@@ -6,11 +6,10 @@ from umath import *
 from pybricks.tools import wait, StopWatch
 
 hub = PrimeHub()
-# Initialize a motor on port A.
-lmotor = Motor(Port.B, positive_direction=Direction.CLOCKWISE)
-rmotor = Motor(Port.A, positive_direction=Direction.COUNTERCLOCKWISE)
+lmotor = Motor(Port.C, positive_direction=Direction.CLOCKWISE)
+rmotor = Motor(Port.E, positive_direction=Direction.COUNTERCLOCKWISE)
 wheels = DriveBase(left_motor=lmotor, right_motor=rmotor, wheel_diameter=56, axle_track=80)
-eye = ColorSensor(Port.F)
+eye = ColorSensor(Port.A)
 eye.detectable_colors([Color.BLACK, Color.WHITE])
 clock = StopWatch()
 margin = 1000
