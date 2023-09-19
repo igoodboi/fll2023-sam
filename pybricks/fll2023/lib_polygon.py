@@ -6,6 +6,11 @@ from lib_turn import turn
 
 
 def principle(angle):
+    """
+    Given an angle (degree), calculate the principle angle in the range (-180, 180]
+    :param angle: any angle in degree
+    :return: the principle angle corresponding to the input in the range (-180, 180]
+    """
     return (angle + 180) % 360 - 180
 
 
