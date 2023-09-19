@@ -74,7 +74,7 @@ def main():
     # print(heading)
     # bot.hub.imu.reset_heading(180)
     # poly(0, [ [100, -100], [0, -100], [0, 0]], bot)
-    poly(0, [[0, 1000], [500, 1000], [960, 0]], bot, reverse=True)
+    poly(0, [[0, 940], [500, 940], [750, 250], [800, 180]], bot, reverse=True)
     # poly(0, [[0, 0], [100, 0], [100, -100], [0, -100], [0, 0]], bot, reverse=True)
 
 
