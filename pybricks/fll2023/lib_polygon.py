@@ -58,7 +58,7 @@ def poly(heading, vertices, robot: Robot, motion_type: int = 1, reverse: bool = 
     :param vertices: the ordered vertices of the polygon, as a list of 2d coordinates, such as [(x1, y1), (x2, y2) ...], with the starting position as the first element
     :param robot: the robot
     :param motion_type: the direction for all the maneuvers: move forward = 1, move backward = -1, freeze = 0 (turn only with no straight motion)
-    :param reverse: reverse course at the end of the trip
+    :param reverse: if True, reverse course to undo all motions and retrack all the vertices back to the origin
     :param speed: specified speed for the whole trip. If unspecified (None), use system default
     :return: final heading (deg), follow pybricks orientation convention
     """
@@ -75,21 +75,18 @@ def poly(heading, vertices, robot: Robot, motion_type: int = 1, reverse: bool = 
         return base_maneuvers[-1][-1]
 
     # reverse course
-    reverse_maneuvers = base_maneuvers[::-1]
+    reverse_maneuvers = [(-a, -d, h) for a, d, h in base_maneuvers[::-1]]
     execute(reverse_maneuvers)
     return reverse_maneuvers[-1][-1]
 
 
 if __name__ == "__main__":
     bot = Robot()
-    # heading = trip([0, 0], [100, 0], bot, heading=180, reverse=True)
-    # bot.hub.imu.reset_heading(180)
-    # heading = trip([0, -100], [0, 0], bot, heading=180)
-    # heading = trip([510, 1000], [960, 0], bot, heading=0)
-    # print(heading)
-    # bot.hub.imu.reset_heading(180)
+    # heading = poly(0, [[0, 0], [100, 0]], bot, motion_type=1, reverse=True)
+    # heading = poly(0, [[0, 0], [100, 0]], bot, motion_type=-1, reverse=True)
+    heading = poly(180, [[0, 0], [100, 0]], bot, motion_type=-1, reverse=True)
     # poly(0, [ [100, -100], [0, -100], [0, 0]], bot)
     # poly(0, [[0, 0], [100, 0], [100, -100], [0, -100], [0, 0]], bot, reverse=True)
-    heading = poly(0, [[0, 940], [500, 940], [700, 250], [760, 100]], bot)
-    heading = poly(heading, [[760, 100], [700, 250]], bot, reverse=True)
-    heading = poly(heading, [[700, 250], [600, 0], [660, 0], [700, 250], [500, 940], [0, 940]], bot)
+    # heading = poly(0, [[0, 940], [500, 940], [700, 250], [760, 100]], bot)
+    # heading = poly(heading, [[760, 100], [700, 250]], bot, reverse=True)
+    # heading = poly(heading, [[700, 250], [600, 0], [660, 0], [700, 250], [500, 940], [0, 940]], bot)
