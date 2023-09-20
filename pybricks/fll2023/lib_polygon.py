@@ -69,12 +69,16 @@ def polygon(heading, vertices, robot: Robot, motion_type: int = 1, reverse: bool
     :return: final heading (deg), follow pybricks orientation convention
     """
 
-    def execute(maneuvers):
+    def execute(maneuvers, turn_first=True):
         for turn_angle, distance, _ in maneuvers:
             if debug:
                 print(turn_angle, distance)
-            turn(robot, turn_angle)
-            move(robot, distance_mm=distance, speed=speed)
+            if turn_first:
+                turn(robot, turn_angle)
+                move(robot, distance_mm=distance, speed=speed)
+            else:
+                move(robot, distance_mm=distance, speed=speed)
+                turn(robot, turn_angle)
 
     base_maneuvers = trip_plan(vertices, heading, motion_type)
     execute(base_maneuvers)
@@ -83,7 +87,7 @@ def polygon(heading, vertices, robot: Robot, motion_type: int = 1, reverse: bool
 
     # reverse course
     reverse_maneuvers = [(-a, -d, h) for a, d, h in base_maneuvers[::-1]]
-    execute(reverse_maneuvers)
+    execute(reverse_maneuvers, turn_first=False)
     return reverse_maneuvers[-1][-1]
 
 
@@ -97,7 +101,9 @@ if __name__ == "__main__":
     # heading = polygon(0, [ [100, -100], [0, -100], [0, 0]], bot)
     # heading = polygon(180, [ [100, -100], [0, -100], [0, 0]], bot)
     # heading = polygon(0, [ [100, -100], [0, -100], [0, 0]], bot, motion_type=-1)
-    heading = polygon(0, [[0, 0], [100, 0], [100, -100], [0, -100], [0, 0]], bot, reverse=True)
-    # heading = polygon(0, [[0, 940], [500, 940], [700, 250], [760, 100]], bot)
-    # heading = polygon(heading, [[760, 100], [700, 250]], bot, reverse=True)
-    # heading = polygon(heading, [[700, 250], [600, 0], [660, 0], [700, 250], [500, 940], [0, 940]], bot)
+    # heading = polygon(0, [[0, 0], [100, 0], [100, -100], [0, -100], [0, 0]], bot, reverse=True)
+    heading = polygon(0, [[0, 940], [500, 940], [800, 250], [900, 100]], bot)
+    heading = polygon(heading, [[900, 100], [800, 250]], bot, motion_type=-1)
+    heading = polygon(heading, [[800, 250], [600, 0]], bot)
+    heading = polygon(heading, [[600, 0], [660, 0]], bot, motion_type=-1)
+    heading = polygon(heading, [[660, 0], [700, 250], [500, 940], [0, 940]], bot, motion_type=-1)
