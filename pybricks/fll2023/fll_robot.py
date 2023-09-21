@@ -5,10 +5,6 @@ from pybricks.robotics import GyroDriveBase
 from pybricks.tools import wait
 
 
-def add_number(a, b):
-    return a + b
-
-
 class Robot:
     def __init__(
             self,
