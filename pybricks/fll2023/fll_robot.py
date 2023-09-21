@@ -1,8 +1,8 @@
 from pybricks.hubs import PrimeHub
-from pybricks.pupdevices import Motor, ColorSensor, UltrasonicSensor, ForceSensor
-from pybricks.parameters import Button, Color, Direction, Port, Side, Stop
-from pybricks.robotics import DriveBase, GyroDriveBase
-from pybricks.tools import wait, StopWatch
+from pybricks.parameters import Direction, Port, Stop
+from pybricks.pupdevices import Motor, ColorSensor
+from pybricks.robotics import GyroDriveBase
+from pybricks.tools import wait
 
 
 def add_number(a, b):
