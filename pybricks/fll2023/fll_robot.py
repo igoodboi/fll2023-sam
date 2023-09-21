@@ -44,11 +44,36 @@ class Robot:
         # self.hub.speaker.beep()
         print('Robot Created!')
 
+    def start_tank(self, left_speed, right_speed):
+        speed = (right_speed + left_speed) / 2
+        turn_rate = (right_speed - left_speed) / self.axle_track
+        self.motor_pair.drive(speed, turn_rate)
+
+    def stop(self) -> None:
+        self.motor_pair.stop()
+
+    def brake(self) -> None:
+        self.left_wheel.brake()
+        self.right_wheel.brake()
+
+    def straight(self, distance, then: Stop = Stop.HOLD, wait: bool = True):
+        # heading & timeout are not used
+        self.motor_pair.straight(distance, then, wait)
+
+    def turn(self, angle, then: Stop = Stop.HOLD, wait: bool = True) -> None:
+        self.motor_pair.turn(angle, then, wait)
+
+    def curve(self, radius, angle, then: Stop = Stop.HOLD, wait: bool = True) -> None:
+        self.motor_pair.curve(radius, angle, then, wait)
+
+    def drive(self, speed, turn_rate) -> None:
+        self.motor_pair.drive(speed, turn_rate)
+
 
 def main():
     bot = Robot()
     while True:
-       print(bot.left_sensor.color())
+        print(bot.left_sensor.color())
 
 
 if __name__ == "__main__":

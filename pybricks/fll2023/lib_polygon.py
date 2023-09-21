@@ -1,7 +1,5 @@
 from umath import *
 
-from lib_move import move
-from lib_turn import turn
 from fll_robot import Robot
 
 debug = False
@@ -55,7 +53,7 @@ def route(point1, point2, heading=0, motion_type=1):
     return turn_angle, distance, new_heading
 
 
-def polygon(heading, vertices, robot: Robot, motion_type: int = 1, reverse: bool = False, speed=None):
+def polygon(heading, vertices, robot: Robot, motion_type: int = 1, reverse: bool = False):
     """
     Given a polygon (vertices), plan the trip and execute the plan to traverse the polygon edges in order.
     heading = the initial orientation of the robot used for determining the first maneuver.
@@ -65,7 +63,6 @@ def polygon(heading, vertices, robot: Robot, motion_type: int = 1, reverse: bool
     :param robot: the robot
     :param motion_type: the direction for all the maneuvers: move forward = 1 (default), move backward = -1, freeze = 0 (turn only with no straight motion)
     :param reverse: if True, reverse course to undo all motions and retrack all the vertices back to the origin
-    :param speed: specified speed for the whole trip. If unspecified (None), use system default
     :return: final heading (deg), follow pybricks orientation convention
     """
 
@@ -74,11 +71,11 @@ def polygon(heading, vertices, robot: Robot, motion_type: int = 1, reverse: bool
             if debug:
                 print(turn_angle, distance)
             if turn_first:
-                turn(robot, turn_angle)
-                move(robot, distance_mm=distance, speed=speed)
+                robot.turn(turn_angle)
+                robot.straight(distance)
             else:
-                move(robot, distance_mm=distance, speed=speed)
-                turn(robot, turn_angle)
+                robot.straight(distance)
+                robot.turn(turn_angle)
 
     base_maneuvers = trip_plan(vertices, heading, motion_type)
     execute(base_maneuvers)
@@ -94,16 +91,27 @@ def polygon(heading, vertices, robot: Robot, motion_type: int = 1, reverse: bool
 if __name__ == "__main__":
     bot = Robot()
     debug = True
-    # heading = polygon(0, [[0, 0], [600, 0]], bot, motion_type=1)
-    # heading = polygon(0, [[0, 0], [600, 0]], bot, motion_type=1, reverse=True)
-    # heading = polygon(180, [[0, 0], [100, 0]], bot, motion_type=-1)
-    # heading = polygon(180, [[0, 0], [100, 0]], bot, motion_type=-1, reverse=True)
-    # heading = polygon(0, [ [100, -100], [0, -100], [0, 0]], bot)
-    # heading = polygon(180, [ [100, -100], [0, -100], [0, 0]], bot)
-    # heading = polygon(0, [ [100, -100], [0, -100], [0, 0]], bot, motion_type=-1)
-    # heading = polygon(0, [[0, 0], [100, 0], [100, -100], [0, -100], [0, 0]], bot, reverse=True)
-    heading = polygon(0, [[0, 940], [500, 940], [800, 250], [850, 150]], bot)
-    heading = polygon(heading, [[850, 150], [800, 250]], bot, motion_type=-1)
-    heading = polygon(heading, [[800, 250], [600, 0]], bot)
-    heading = polygon(heading, [[600, 0], [660, 0]], bot, motion_type=-1)
-    heading = polygon(heading, [[660, 0], [700, 250], [500, 940], [0, 940]], bot, motion_type=-1)
+
+
+    def tests():
+        heading = polygon(0, [[0, 0], [600, 0]], bot, motion_type=1)
+        heading = polygon(0, [[0, 0], [600, 0]], bot, motion_type=1, reverse=True)
+        heading = polygon(180, [[0, 0], [100, 0]], bot, motion_type=-1)
+        heading = polygon(180, [[0, 0], [100, 0]], bot, motion_type=-1, reverse=True)
+        heading = polygon(0, [[100, -100], [0, -100], [0, 0]], bot)
+        heading = polygon(180, [[100, -100], [0, -100], [0, 0]], bot)
+        heading = polygon(0, [[100, -100], [0, -100], [0, 0]], bot, motion_type=-1)
+        heading = polygon(0, [[0, 0], [100, 0], [100, -100], [0, -100], [0, 0]], bot, reverse=True)
+        heading = polygon(0, [[0, 940], [500, 940], [800, 250], [850, 150]], bot, reverse=True)
+
+
+    def roudtrip():
+        heading = polygon(0, [[0, 940], [500, 940], [800, 250], [850, 150]], bot)
+        heading = polygon(heading, [[850, 150], [800, 250]], bot, motion_type=-1)
+        heading = polygon(heading, [[800, 250], [700, -200]], bot)
+        heading = polygon(heading, [[700, -200], [200, -200], [500, 940]], bot)
+        heading = polygon(heading, [[500, 940], [0, 940]], bot, motion_type=-1)
+
+
+    # tests()
+    roudtrip()
