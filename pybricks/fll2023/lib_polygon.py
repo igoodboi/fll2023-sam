@@ -42,6 +42,8 @@ def route(point1, point2, heading=0, motion_type=1):
     :return: a tuple of (turn angle, straight distance, ending orientation)
     """
     displacement = [point2[0] - point1[0], point2[1] - point1[1]]
+    if displacement[0] == displacement[1] == 0:
+        return 0, 0, heading
     polar_angle = atan2(displacement[1], displacement[0]) * 180 / pi
     radius = sqrt(pow(displacement[1], 2) + pow(displacement[0], 2))
     new_heading = polar_angle + (180 if motion_type == -1 else 0)
@@ -105,12 +107,16 @@ if __name__ == "__main__":
         heading = polygon(0, [[0, 940], [500, 940], [800, 250], [850, 150]], bot, reverse=True)
 
 
-    def roudtrip():
+    def roundtrip():
         heading = polygon(0, [[0, 940], [500, 940], [800, 250], [850, 150]], bot)
         heading = polygon(heading, [[850, 150], [800, 250]], bot, motion_type=-1)
         heading = polygon(heading, [[800, 250], [700, -200], [200, -200], [100, 940]], bot)
         heading = polygon(heading, [[100, 940], [0, 940]], bot, motion_type=-1)
 
+    def undotrip():
+        heading = polygon(0, [[0, 940], [500, 940], [800, 250], [800, 250], [700, -200], [200, -200], [100, 940]], bot, reverse=True)
+
 
     # tests()
-    roudtrip()
+    # roundtrip()
+    undotrip()
